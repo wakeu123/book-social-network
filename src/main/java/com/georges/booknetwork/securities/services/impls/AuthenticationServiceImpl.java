@@ -53,5 +53,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private void validateBeforeSave(RegistrationRequest request, Locale locale) {
+        
     }
 }

@@ -12,11 +12,14 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class Token {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "token_seq")
+    @SequenceGenerator(name = "token_seq", sequenceName = "token_seq", initialValue = 1, allocationSize = 1)
     private Long id;
+    @Column(nullable = false)
     private String userToken;
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;

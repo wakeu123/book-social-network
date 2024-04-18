@@ -4,9 +4,16 @@ spring:
   servlet:
     multipart:
       max-file-size: 50MB
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+
 springdoc:
   default-produces-media-type: application/json
 
 server:
+  error:
+    include-binding-errors: always
+    include-message: always
   servlet:
     context-path: /api/v1/
