@@ -34,7 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         locale);
                 throw new BookException(message);
             }
-            //validateBeforeSave(request, locale);
+            validateBeforeSave(request, locale);
             User user = new User();
             user.setFirstname(request.getFirstname());
             user.setLastname(request.getLastname());
@@ -50,5 +50,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String message = messageSource.getMessage("unable.to.save.model", new Object[] { request }, locale);
             throw new BookException(INTERNAL_SERVER_ERROR.value(), message);
         }
+    }
+
+    private void validateBeforeSave(RegistrationRequest request, Locale locale) {
     }
 }
