@@ -54,8 +54,25 @@ public class AuthController {
             log.debug(ex.getMessage());
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(ex.getMessage());
         } catch (Exception e) {
-            log.error("");
+            log.error("Unexpected error while login user : {}", request, e);
             String message = messageSource.getMessage("unable.to.authenticate.username", new Object[]{ request.getUsername() }, locale);
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(message);
+        }
+    }
+
+    @GetMapping("/activate-account")
+    public ResponseEntity<?> authenticate(@RequestParam String token, @RequestHeader("Accept-Language") Locale locale) {
+        log.debug("Call of activate account with token: {}", token);
+        try {
+            service.activateAccount(token, locale);
+            log.debug("Account successfully activated");
+            return ResponseEntity.ok().body(true);
+        } catch (BookException ex) {
+            log.debug(ex.getMessage());
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        } catch (Exception e) {
+            log.error("Unexpected error while activate account : {}", token, e);
+            String message = messageSource.getMessage("unable.to.activate.account.with.token", new Object[]{ token }, locale);
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(message);
         }
     }
