@@ -4,11 +4,13 @@ import com.georges.booknetwork.domains.EmailTemplateName;
 import com.georges.booknetwork.domains.Role;
 import com.georges.booknetwork.domains.Token;
 import com.georges.booknetwork.domains.User;
+import com.georges.booknetwork.domains.request.AuthenticationRequest;
 import com.georges.booknetwork.domains.request.RegistrationRequest;
 import com.georges.booknetwork.exceptions.BookException;
 import com.georges.booknetwork.repositories.RoleRepository;
 import com.georges.booknetwork.repositories.TokenRepository;
 import com.georges.booknetwork.repositories.UserRepository;
+import com.georges.booknetwork.securities.JwtService;
 import com.georges.booknetwork.securities.services.AuthenticationService;
 import com.georges.booknetwork.services.EmailService;
 import jakarta.mail.MessagingException;
@@ -16,11 +18,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,12 +36,14 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+    private final JwtService jwtService;
+    private final EmailService emailService;
     private final MessageSource messageSource;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EmailService emailService;
+    private final AuthenticationManager authenticationManager;
 
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
@@ -65,7 +72,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .firstname(request.getFirstname())
                     .lastname(request.getLastname())
                     .email(request.getEmail())
-                    .dateOfBirth(request.getDateOfBirth())
+                    .dateOfBirth(LocalDateTime.now().toLocalDate())
                     .roles(List.of(role))
                     .enabled(false)
                     .accountLocked(false)
@@ -82,6 +89,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String message = messageSource.getMessage("unable.to.save.model", new Object[] { request }, locale);
             throw new BookException(INTERNAL_SERVER_ERROR.value(), message);
         }
+    }
+
+    @Override
+    public String authenticate(AuthenticationRequest request, Locale locale) {
+        var auth = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        var claims = new HashMap<String, Object>();
+        var user = ((User)auth.getPrincipal());
+        claims.put("fullName", user.fullName());
+        var token = this.jwtService.generateToken(claims, user);
+        return token;
     }
 
     private void sendValidationEmail(User user) throws MessagingException {
