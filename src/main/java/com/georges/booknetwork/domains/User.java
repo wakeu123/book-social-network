@@ -1,42 +1,42 @@
 package com.georges.booknetwork.domains;
 
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.security.Principal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.time.LocalDateTime;
+import java.security.Principal;
 import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @Entity(name = "User")
-@Table(name = "BCP_USER")
+@Table(name = "BCP_USERS")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails, Principal {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", initialValue = 1, allocationSize = 1)
     private Long id;
-    private String firstname;
-    private String lastname;
-    private LocalDate dateOfBirth;
     @Column(unique = true)
     private String email;
     private String password;
+    private String lastname;
     private boolean enabled;
+    private String firstname;
+    private LocalDate dateOfBirth;
     private boolean accountLocked;
 
     @ManyToMany(fetch = FetchType.EAGER)

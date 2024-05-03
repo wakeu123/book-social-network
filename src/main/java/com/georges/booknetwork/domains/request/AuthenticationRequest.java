@@ -11,9 +11,9 @@ import lombok.Setter;
 @Builder
 public class AuthenticationRequest {
 
-    @NotEmpty(message = "unable.to.authenticate.empty.username")
-    @NotBlank(message = "unable.to.authenticate.null.username")
-    private String username;
+    @NotEmpty(message = "unable.to.authenticate.empty.email")
+    @NotBlank(message = "unable.to.authenticate.null.email")
+    private String email;
 
     @NotEmpty(message = "unable.to.authenticate.empty.password")
     @NotBlank(message = "unable.to.authenticate.null.password")

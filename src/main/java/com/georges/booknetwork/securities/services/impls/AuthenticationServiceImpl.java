@@ -13,6 +13,7 @@ import com.georges.booknetwork.repositories.TokenRepository;
 import com.georges.booknetwork.domains.request.RegistrationRequest;
 import com.georges.booknetwork.domains.request.AuthenticationRequest;
 import com.georges.booknetwork.securities.services.AuthenticationService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import jakarta.mail.MessagingException;
@@ -61,7 +62,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 throw new BookException(message);
             }
             validateBeforeSave(request, locale);
-            Role role = this.roleRepository.findByName(request.getRole())
+            Role role = this.roleRepository.findByName("USER")
                     .orElseThrow(() -> {
                         String message = this.messageSource.getMessage("unable.to.initialize.role", new Object[] { request },
                                 locale);
@@ -79,7 +80,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .password(this.passwordEncoder.encode(request.getPassword()))
                     .build();
             request.setId(this.userRepository.save(user).getId());
-            sendValidationEmail(user);
+            //sendValidationEmail(user);
             log.debug("entity successfully saved : {} ", request);
             return request;
         } catch (BookException e) {
@@ -93,18 +94,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public String authenticate(AuthenticationRequest request, Locale locale) {
-        log.debug("Try to authenticate username : {}", request.getUsername());
+        log.debug("Try to authenticate username : {}", request.getEmail());
         try {
-            if (request.getUsername() == null || request.getPassword() == null) {
+            if (request.getEmail() == null || request.getPassword() == null) {
                 String message = this.messageSource.getMessage("unable.to.authenticate.username", new Object[] { request },
                         locale);
                 throw new BookException(message);
             }
-            var auth = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+            var auth = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
             var claims = new HashMap<String, Object>();
             var user = ((User)auth.getPrincipal());
             claims.put("fullName", user.fullName());
-            log.debug("Username successfully authenticated : {} ", request.getUsername());
+            log.debug("Username successfully authenticated : {} ", request.getEmail());
             return this.jwtService.generateToken(claims, user);
         } catch (BookException e) {
             throw e;
@@ -116,6 +117,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    @Transactional
     public void activateAccount(String token, Locale locale) {
         log.debug("Try to activate account with this token : {}", token);
         try {

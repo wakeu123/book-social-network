@@ -3,6 +3,7 @@ package com.georges.booknetwork.controllers;
 import java.util.Locale;
 
 import com.georges.booknetwork.domains.request.AuthenticationRequest;
+import com.georges.booknetwork.domains.request.AuthenticationResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
@@ -43,19 +44,21 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> authenticate(@RequestBody @Valid AuthenticationRequest request, @RequestHeader("Accept-Language") Locale locale) {
-        log.debug("Call of authenticate username: {} with password: {}", request.getUsername(), request.getPassword());
+    @PostMapping("/authenticate")
+    public ResponseEntity<?> authenticate(@RequestBody @Valid AuthenticationRequest request, @RequestHeader("Accept-Language") Locale locale) {
+        log.debug("Call of authenticate username: {} with password: {}", request.getEmail(), request.getPassword());
         try {
-            var token = service.authenticate(request, locale);
-            log.debug("Username: {} successfully authenticated", request.getUsername());
-            return ResponseEntity.ok().body(token);
+            //var token = service.authenticate(request, locale);
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setToken(service.authenticate(request, locale));
+            log.debug("Username: {} successfully authenticated", request.getEmail());
+            return ResponseEntity.ok().body(response);
         } catch (BookException ex) {
             log.debug(ex.getMessage());
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(ex.getMessage());
         } catch (Exception e) {
             log.error("Unexpected error while login user : {}", request, e);
-            String message = messageSource.getMessage("unable.to.authenticate.username", new Object[]{ request.getUsername() }, locale);
+            String message = messageSource.getMessage("unable.to.authenticate.username", new Object[]{ request.getEmail() }, locale);
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(message);
         }
     }

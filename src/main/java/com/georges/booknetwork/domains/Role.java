@@ -38,4 +38,8 @@ public class Role {
     @LastModifiedDate
     @Column(insertable = false)
     private LocalDateTime lastModifiedDate;
+
+    public Role(String role) {
+        this.name = role;
+    }
 }
