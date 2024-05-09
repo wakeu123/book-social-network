@@ -20,6 +20,27 @@ services:
     ports:
       - 1080:1080
       - 1025:1025
+  bsn-api:
+    container_name: bsn-api
+    image: bsn/bsn-api:1.0.0
+    ports:
+      - 8088:8088
+    networks:
+      - spring-demo
+    depends_on:
+      - postgres
+  bsn-ui:
+    image: bsn/bsn-ui:1.0.0
+    container_name: bsn-ui
+    restart: always
+    environment:
+      NODE_ENV: production
+    ports:
+      - 8080:80
+    networks:
+      - spring-demo
+    depends_on:
+      - bsn-api
 
 networks:
   spring-demo:

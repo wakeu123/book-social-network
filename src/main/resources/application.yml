@@ -15,6 +15,6 @@ server:
   error:
     include-binding-errors: always
     include-message: always
-  port: 8088
+  port: 8090
   servlet:
     context-path: /api/v1/

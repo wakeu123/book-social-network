@@ -47,7 +47,7 @@ public abstract class MainObject extends Persistent{
     /**
      * Default constructor.
      */
-    MainObject() {
+    public MainObject() {
         creationDate = new Timestamp(System.currentTimeMillis());
         modificationDate = new Timestamp(System.currentTimeMillis());
     }

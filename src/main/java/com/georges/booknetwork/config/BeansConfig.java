@@ -1,6 +1,8 @@
 package com.georges.booknetwork.config;
 
+import io.swagger.v3.oas.models.parameters.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +21,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.springframework.http.HttpHeaders.*;
 
@@ -30,7 +33,7 @@ public class BeansConfig {
     private final UserDetailsService userDetailsService;
 
     @Value("${application.cors.allowedOrigins}")
-    private String allowedOrigins;
+    private List<String> allowedOrigins;
 
     @Bean
     public MessageSource sourceAutoConfiguration() {
@@ -62,8 +65,8 @@ public class BeansConfig {
     public CorsFilter corsFilter() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.setAllowedOrigins(Collections.singletonList(allowedOrigins));
+        //config.setAllowCredentials(true);
+        config.setAllowedOrigins(allowedOrigins);
         config.setAllowedHeaders(Arrays.asList(
                 ORIGIN,
                 ACCEPT,
@@ -76,5 +79,16 @@ public class BeansConfig {
         ));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
+    }
+
+    @Bean
+    public OperationCustomizer customizerHeaderApi() {
+        return ((operation, handlerMethod) -> operation.addParametersItem(
+                new Parameter()
+                        .in("header")
+                        .required(true)
+                        .name("Accept-Language")
+                        .description("Accept-Language")));
+
     }
 }
