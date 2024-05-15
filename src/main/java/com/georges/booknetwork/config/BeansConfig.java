@@ -74,9 +74,7 @@ public class BeansConfig {
                 AUTHORIZATION,
                 ACCEPT_LANGUAGE
         ));
-        config.setAllowedMethods(Arrays.asList(
-                "GET", "PUT", "POST", "DELETE", "PATCH"
-        ));
+        config.setAllowedMethods(Arrays.asList("GET", "POST"));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

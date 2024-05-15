@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.georges</groupId>
 	<artifactId>book-network</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.5</version>
 	<name>book-network-api</name>
 	<description>Book application demo</description>
 	<properties>
