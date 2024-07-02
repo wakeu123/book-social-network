@@ -20,7 +20,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.*;
@@ -65,7 +64,6 @@ public class BeansConfig {
     public CorsFilter corsFilter() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration config = new CorsConfiguration();
-        //config.setAllowCredentials(true);
         config.setAllowedOrigins(allowedOrigins);
         config.setAllowedHeaders(Arrays.asList(
                 ORIGIN,

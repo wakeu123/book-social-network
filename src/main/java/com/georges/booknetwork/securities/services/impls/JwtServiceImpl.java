@@ -1,22 +1,23 @@
-package com.georges.booknetwork.securities;
+package com.georges.booknetwork.securities.services.impls;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
+import com.georges.booknetwork.securities.services.JwtService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
-import java.security.Key;
+import java.util.Map;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
+import java.security.Key;
 import java.util.function.Function;
 
 @Service
-public class JwtService {
+public class JwtServiceImpl implements JwtService {
 
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;

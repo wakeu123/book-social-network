@@ -1,13 +1,13 @@
 package com.georges.booknetwork.securities.services;
 
-import com.georges.booknetwork.domains.request.AuthenticationRequest;
-import com.georges.booknetwork.domains.request.RegistrationRequest;
-import jakarta.mail.MessagingException;
-
 import java.util.Locale;
+import jakarta.mail.MessagingException;
+import com.georges.booknetwork.domains.request.RegistrationRequest;
+import com.georges.booknetwork.domains.request.AuthenticationRequest;
 
 public interface AuthenticationService {
-    public RegistrationRequest register(RegistrationRequest request, Locale locale);
+
+    RegistrationRequest register(RegistrationRequest request, Locale locale);
 
     String authenticate(AuthenticationRequest request, Locale locale);
 

@@ -3,6 +3,8 @@ package com.georges.booknetwork.controllers;
 import com.georges.booknetwork.domains.Scientist;
 import com.georges.booknetwork.exceptions.BookException;
 import com.georges.booknetwork.services.ScientistService;
+import com.georges.booknetwork.utils.QrCodeGenerator;
+import com.google.zxing.WriterException;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -57,5 +61,17 @@ public class ScientistController {
             String message = messageSource.getMessage("unable.to.retrieve.scientist.with.name", new Object[]{ name }, locale);
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(message);
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> search(@RequestHeader("Accept-Language") Locale locale) throws IOException, WriterException {
+        List<Scientist> items = scientistService.search(locale);
+        if(items.size() > 0) {
+            for (var item : items) {
+                QrCodeGenerator.generateQrCode(item);
+            }
+
+        }
+        return ResponseEntity.ok(items);
     }
 }

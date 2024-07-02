@@ -4,7 +4,6 @@ import com.georges.booknetwork.domains.Role;
 import com.georges.booknetwork.domains.User;
 import com.georges.booknetwork.domains.Token;
 import com.georges.booknetwork.services.EmailService;
-import com.georges.booknetwork.securities.JwtService;
 import com.georges.booknetwork.exceptions.BookException;
 import com.georges.booknetwork.domains.EmailTemplateName;
 import com.georges.booknetwork.repositories.RoleRepository;
@@ -37,7 +36,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final JwtService jwtService;
+    private final JwtServiceImpl jwtService;
     private final EmailService emailService;
     private final MessageSource messageSource;
     private final RoleRepository roleRepository;

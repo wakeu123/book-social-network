@@ -39,7 +39,7 @@ application:
       secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
       expiration: 8640000
   cors:
-    allowedOrigins: http://localhost:4200,http://localhost:8080
+    allowedOrigins: http://localhost:4200,http://localhost:8090
   mailing:
     frontend:
       activation-url: ${MAILING_FRONTEND_ACTIVATION_URL:http://localhost:4200/activate-account}

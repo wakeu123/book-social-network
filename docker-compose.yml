@@ -24,17 +24,13 @@ services:
     depends_on:
       - postgres
   bsn-ui:
-    image: bsn/bsn-ui:1.0.3
+    image: bsn/bsn-ui:1.0.16
     container_name: bsn-ui
     restart: always
-    environment:
-      NODE_ENV: production
     ports:
-      - 8080:80
+      - 9000:4200
     networks:
       - spring-demo
-    depends_on:
-      - bsn-api
 
 networks:
   spring-demo:

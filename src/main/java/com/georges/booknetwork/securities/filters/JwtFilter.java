@@ -1,6 +1,6 @@
 package com.georges.booknetwork.securities.filters;
 
-import com.georges.booknetwork.securities.JwtService;
+import com.georges.booknetwork.securities.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +25,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+
     @Override
     protected void doFilterInternal(
             @NotNull HttpServletRequest request,

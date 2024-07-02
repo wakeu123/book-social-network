@@ -30,7 +30,7 @@ import static io.swagger.v3.oas.annotations.enums.SecuritySchemeType.HTTP;
         servers = {
                 @Server(
                         description = "Local ENV",
-                        url = "http://localhost:8088/api/v1"
+                        url = "http://localhost:8090/api/v1"
                 ),
                 @Server(
                         description = "Prod ENV",
